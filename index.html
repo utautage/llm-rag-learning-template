@@ -41,11 +41,50 @@
                 </div>
             </aside>
         </main>
+
+        <section id="assignment-a" style="margin-top:2rem;">
+            <h2>課題A：注意重みの計算サンドボックス</h2>
+            <p>Query（視点）、Keys（各単語の特徴ベクトル）、Values（各単語の情報量）をJSON配列で入力し、「計算を実行」を押すと、Attentionの重みと重み付き和が表示されます。</p>
+
+            <div style="display:grid; gap:12px; grid-template-columns:1fr; max-width:860px;">
+                <label>
+                    <strong>Query（例：[1, 0.5, -1]）</strong><br>
+                    <textarea id="q-input" rows="2" style="width:100%; font-family:monospace;"></textarea>
+                </label>
+                <label>
+                    <strong>Keys（例：[[1,0,0],[0,1,0],[0,0,1]]）</strong><br>
+                    <textarea id="k-input" rows="3" style="width:100%; font-family:monospace;"></textarea>
+                </label>
+                <label>
+                    <strong>Values（例：[10,20,30]）</strong><br>
+                    <textarea id="v-input" rows="2" style="width:100%; font-family:monospace;"></textarea>
+                </label>
+
+                <div>
+                    <button id="load-sample">サンプル読み込み</button>
+                    <button id="run-attn">計算を実行</button>
+                    <span id="notes" style="margin-left:8px; color:#c00;"></span>
+                </div>
+
+                <pre id="attn-output" style="background:#111; color:#ddd; padding:12px; border-radius:8px; overflow:auto;"></pre>
+            </div>
+
+            <details style="margin-top:8px;">
+                <summary>ヒント：結果の見方</summary>
+                <ul>
+                    <li>Score は Q と各 K の内積（関連度）。</li>
+                    <li>Scaled は Score を √d<sub>k</sub> で割った値（数値の安定化）。</li>
+                    <li>Weight は softmax で正規化された注目度（合計1）。</li>
+                    <li>Result は Value の重み付き和（Attention の出力）。</li>
+                </ul>
+            </details>
+        </section>
     </div>
     
     <!-- JavaScriptファイルの読み込み -->
     <script src="js/config.js"></script>
     <script src="js/llm-client.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/attention-demo.js"></script>
 </body>
 </html>

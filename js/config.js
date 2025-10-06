@@ -1,7 +1,7 @@
 // API設定
 const API_CONFIG = {
-    baseURL: 'https://your-api-url.vercel.app', // 教員から伝えられたAPI URLに変更
-    studentId: 'student_XXX' // 各自の学生IDに変更
+    baseURL: 'https://llm-education-proxy.vercel.app', // 教員から伝えられたAPI URLに変更
+    studentId: 'student_20', // 各自の学生IDに変更
 
     // APIリクエストのデフォルト設定
     defaultOptions: {
