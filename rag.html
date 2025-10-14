@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title>RAGシステム</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>🔍 RAG質問応答システム</h1>
+    
+    <input id="question" placeholder="質問を入力">
+    <button onclick="askRAG()">質問する</button>
+    
+    <div id="rag-result"></div>
+    
+    <script src="js/config.js"></script>
+    <script src="js/llm-client.js"></script>
+    <script src="js/vector-search.js"></script>
+    <script src="js/rag-system.js"></script>
+    <script src="js/app-rag.js"></script>
+</body>
+</html>

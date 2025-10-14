@@ -107,15 +107,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-const model = new SimpleAttention();
-const queries = [
+async function testAttention() {
+  const model = new SimpleAttention();
+  const queries = [
     [1, 0], // 単語Aからの視点
     [0, 1]  // 単語Bからの視点
-];
-const keys = [[1,0], [0,1]];
-const values = [10, 20];
+  ];
+  const keys = [[1, 0], [0, 1]];
+  const values = [10, 20];
 
-for (const q of queries) {
+  for (const q of queries) {
     const result = model.compute(q, keys, values);
     console.log('Query:', q, '→ Attention result:', result);
+  }
 }
