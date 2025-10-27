@@ -59,23 +59,39 @@ ${context}
 
 回答:`;
     }
-
+    
     displayRAGResult(result) {
         const resultDiv = document.getElementById('rag-result');
-        const responseDiv = document.createElement('div');
-        responseDiv.textContent = result.response;
-        resultDiv.appendChild(responseDiv);
-
-        // TODO: 参考文書の表示を仕上げる
-        // 表示のイメージ：
-        // 🌱 💻 文書1 (類似度: 0.892)
-        // 変数は、データを格納するための...
-        // 📖 変数の概念 | 📂 programming | 🌱 beginner
-        //
-        // 🌿 💻 文書2 (類似度: 0.654)
-        // 関数は変数を使って...
-        // 📖 関数の基本 | 📂 programming | 🌿 intermediate
-        
+        const response = document.createElement('p');
+        response.textContent = result.response;
+        resultDiv.appendChild(response);
+        const ul = document.createElement('ul');
+        result.sources.forEach((source, index) => {
+            let levelText = source.document.metadata.level;
+            let levelIcon = '';
+            switch (levelText) {
+                case 'beginner':
+                    levelIcon = '🌱';
+                    break;
+                case 'intermediate':
+                    levelIcon = '🌿';
+                    break;
+                case 'advanced':
+                    levelIcon = '🍀';
+                    break;
+            }
+            let similarity = source.similarity;
+            let color = similarity > 0.8 ? 'green' : similarity > 0.5 ? 'orange' : 'gray';
+            const li = document.createElement('li');
+            li.setAttribute('style', `color: ${color}`);
+            li.insertAdjacentText('beforeend', `${levelIcon} 💻 文書${index + 1} (類似度: ${source.similarity.toFixed(3)})`);
+            li.insertAdjacentElement('beforeend', document.createElement('br'));
+            li.insertAdjacentText('beforeend', source.document.text);
+            li.insertAdjacentElement('beforeend', document.createElement('br'));
+            li.insertAdjacentText('beforeend', `📖 ${source.document.metadata.title} | 📂 ${source.document.metadata.subject} | ${levelIcon} ${levelText}`);
+            ul.appendChild(li);
+        });
+        resultDiv.appendChild(ul);
         console.log(result);
     }
 }
