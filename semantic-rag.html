@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>セマンティックRAGシステム</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+      }
+
+      h1 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 2em;
+      }
+
+      .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 0.9em;
+      }
+
+      .input-section {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+      }
+
+      #question-input {
+        flex: 1;
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      #question-input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .btn {
+        padding: 15px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-secondary {
+        background: #f0f0f0;
+        color: #333;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .status {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: none;
+      }
+
+      .status.loading {
+        background: #e3f2fd;
+        color: #1976d2;
+        display: block;
+      }
+
+      .status.error {
+        background: #ffebee;
+        color: #c62828;
+        display: block;
+      }
+
+      .status.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+        display: block;
+      }
+
+      #semantic-result {
+        margin-top: 20px;
+      }
+
+      .semantic-answer {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #667eea;
+      }
+
+      .semantic-answer h3 {
+        color: #667eea;
+        margin-bottom: 15px;
+      }
+
+      .semantic-answer h4 {
+        color: #333;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+
+      .semantic-answer p {
+        line-height: 1.6;
+        color: #333;
+      }
+
+      .semantic-answer ul {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+
+      .semantic-answer li {
+        margin-bottom: 5px;
+      }
+
+      .source-doc {
+        margin: 10px 0;
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .source-doc strong {
+        color: #2196f3;
+      }
+
+      .source-doc p {
+        margin: 10px 0;
+        color: #555;
+      }
+
+      .source-doc small {
+        color: #999;
+        font-size: 0.85em;
+      }
+
+      .comparison-section {
+        margin-top: 40px;
+        padding: 20px;
+        background: #f0f0f0;
+        border-radius: 10px;
+      }
+
+      .comparison-section h3 {
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🧠 セマンティックRAGシステム</h1>
+      <p class="subtitle">オントロジー強化による意味ベースの検索</p>
+
+      <div class="status" id="status"></div>
+
+      <div class="input-section">
+        <input
+          type="text"
+          id="question-input"
+          placeholder="質問を入力してください（例: プログラミングとは？）"
+          disabled
+        />
+        <button
+          class="btn btn-primary"
+          id="ask-btn"
+          onclick="askSemantic()"
+          disabled
+        >
+          🔍 質問する
+        </button>
+        <button
+          class="btn btn-secondary"
+          id="compare-btn"
+          onclick="compareWithRAG()"
+          disabled
+        >
+          ⚖️ RAGと比較
+        </button>
+      </div>
+
+      <div id="semantic-result"></div>
+
+      <div class="comparison-section" id="comparison" style="display: none;">
+        <h3>📊 通常RAG vs セマンティックRAG</h3>
+        <div id="comparison-content"></div>
+      </div>
+    </div>
+
+    <!-- スクリプトの読み込み -->
+    <script src="js/config.js"></script>
+    <script src="js/llm-client.js"></script>
+    <script src="js/vector-search.js"></script>
+    <script src="js/ontology.js"></script>
+    <script src="js/concept-extractor.js"></script>
+    <script src="js/semantic-rag.js"></script>
+    <script src="js/rag-system.js"></script>
+    <script>
+      let semanticRAG;
+      let normalRAG;
+
+      // ステータス表示
+      function showStatus(message, type = "loading") {
+        const status = document.getElementById("status");
+        status.textContent = message;
+        status.className = "status " + type;
+      }
+
+      // システム初期化
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          showStatus("🚀 システムを初期化中...", "loading");
+
+          // データの読み込み
+          const [documentsRes, ontologyRes] = await Promise.all([
+            fetch("data/sample-documents.json"),
+            fetch("data/learning-ontology.json"),
+          ]);
+
+          const documentsData = await documentsRes.json();
+          const ontologyData = await ontologyRes.json();
+
+          // セマンティックRAGの初期化
+          semanticRAG = new SemanticRAGSystem();
+          await semanticRAG.initialize(documentsData.documents, ontologyData);
+
+          // 通常RAGの初期化（比較用）
+          normalRAG = new RAGSystem();
+          await normalRAG.initialize(documentsData.documents);
+
+          // ボタン有効化
+          document.getElementById("question-input").disabled = false;
+          document.getElementById("ask-btn").disabled = false;
+          document.getElementById("compare-btn").disabled = false;
+
+          showStatus("✅ システム準備完了！質問を入力してください", "success");
+
+          setTimeout(() => {
+            document.getElementById("status").style.display = "none";
+          }, 3000);
+        } catch (error) {
+          console.error("初期化エラー:", error);
+          showStatus("❌ エラーが発生しました: " + error.message, "error");
+        }
+      });
+
+      // セマンティック検索
+      async function askSemantic() {
+        const input = document.getElementById("question-input");
+        const question = input.value.trim();
+
+        if (!question) {
+          alert("質問を入力してください");
+          return;
+        }
+
+        try {
+          showStatus("🔍 セマンティック検索中...", "loading");
+          document.getElementById("ask-btn").disabled = true;
+
+          const result = await semanticRAG.semanticQuery(question);
+          semanticRAG.displayRAGResult(result);
+
+          document.getElementById("status").style.display = "none";
+        } catch (error) {
+          console.error("検索エラー:", error);
+          showStatus("❌ エラーが発生しました", "error");
+        } finally {
+          document.getElementById("ask-btn").disabled = false;
+        }
+      }
+
+      // RAGとの比較
+      async function compareWithRAG() {
+        const input = document.getElementById("question-input");
+        const question = input.value.trim();
+
+        if (!question) {
+          alert("質問を入力してください");
+          return;
+        }
+
+        try {
+          showStatus("⚖️ 両システムで検索中...", "loading");
+          document.getElementById("compare-btn").disabled = true;
+
+          // 並行して両方のシステムで検索
+          const [semanticResult, normalResult] = await Promise.all([
+            semanticRAG.semanticQuery(question),
+            normalRAG.query(question),
+          ]);
+
+          // 比較結果を表示
+          displayComparison(semanticResult, normalResult);
+
+          document.getElementById("status").style.display = "none";
+        } catch (error) {
+          console.error("比較エラー:", error);
+          showStatus("❌ エラーが発生しました", "error");
+        } finally {
+          document.getElementById("compare-btn").disabled = false;
+        }
+      }
+
+      // 比較結果の表示
+      function displayComparison(semanticResult, normalResult) {
+        const container = document.getElementById("comparison");
+        const content = document.getElementById("comparison-content");
+
+        content.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 15px; border-radius: 8px;">
+                        <h4 style="color: #667eea;">🧠 セマンティックRAG</h4>
+                        <p><strong>回答:</strong> ${semanticResult.answer.substring(
+                          0,
+                          200
+                        )}...</p>
+                        <p><strong>使用概念:</strong> ${semanticResult.conceptsUsed.join(
+                          ", "
+                        )}</p>
+                        <p><strong>参考文書数:</strong> ${
+                          semanticResult.sources.length
+                        }</p>
+                    </div>
+
+                    <div style="background: white; padding: 15px; border-radius: 8px;">
+                        <h4 style="color: #2196F3;">📚 通常RAG</h4>
+                        <p><strong>回答:</strong> ${normalResult.response.substring(
+                          0,
+                          200
+                        )}...</p>
+                        <p><strong>参考文書数:</strong> ${
+                          normalResult.sources.length
+                        }</p>
+                    </div>
+                </div>
+            `;
+
+        container.style.display = "block";
+      }
+
+      // Enterキーで検索
+      document.addEventListener("keypress", (e) => {
+        if (e.key === "Enter" && !document.getElementById("ask-btn").disabled) {
+          askSemantic();
+        }
+      });
+    </script>
+  </body>
+</html>

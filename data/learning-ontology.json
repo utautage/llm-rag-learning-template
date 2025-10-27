@@ -1,0 +1,70 @@
+{
+  "concepts": {
+    "programming": {
+      "label": "プログラミング",
+      "level": "beginner",
+      "subConcepts": ["variables", "functions", "loops", "conditionals"],
+      "prerequisites": [],
+      "relatedConcepts": ["computer-science", "algorithms"],
+      "description": "コンピュータプログラムの作成技術"
+    },
+    "variables": {
+      "label": "変数",
+      "level": "beginner",
+      "subConcepts": ["data-types", "scope"],
+      "prerequisites": [],
+      "relatedConcepts": ["memory", "assignment"],
+      "description": "データを格納するための名前付きの場所"
+    },
+    "functions": {
+      "label": "関数",
+      "level": "intermediate",
+      "subConcepts": ["parameters", "return-values", "recursion"],
+      "prerequisites": ["variables"],
+      "relatedConcepts": ["procedures", "methods", "abstraction"],
+      "description": "再利用可能なコードブロック"
+    },
+    "data-structures": {
+      "label": "データ構造",
+      "level": "intermediate",
+      "subConcepts": ["arrays", "linked-lists", "trees", "graphs"],
+      "prerequisites": ["programming", "variables"],
+      "relatedConcepts": ["algorithms", "complexity"],
+      "description": "データを効率的に格納・操作する方法"
+    },
+    "algorithms": {
+      "label": "アルゴリズム",
+      "level": "intermediate",
+      "subConcepts": ["sorting", "searching", "recursion"],
+      "prerequisites": ["programming", "functions"],
+      "relatedConcepts": ["data-structures", "complexity"],
+      "description": "問題解決の手順"
+    }
+  },
+  "relations": [
+    {
+      "from": "variables",
+      "to": "functions",
+      "type": "prerequisite",
+      "strength": 0.8
+    },
+    {
+      "from": "functions",
+      "to": "recursion",
+      "type": "prerequisite",
+      "strength": 0.9
+    },
+    {
+      "from": "programming",
+      "to": "data-structures",
+      "type": "prerequisite",
+      "strength": 0.7
+    },
+    {
+      "from": "algorithms",
+      "to": "data-structures",
+      "type": "related",
+      "strength": 0.9
+    }
+  ]
+}
