@@ -15,6 +15,8 @@ class ConceptExtractor {
       ["data-structures", ["データ構造", "data structure", "配列", "array"]],
       ["algorithms", ["アルゴリズム", "algorithm", "計算手法"]],
       ["recursion", ["再帰", "recursion", "再帰的"]],
+      ['object-oriented', ['オブジェクト指向', 'OOP', 'クラス', 'インスタンス']],
+      ['inheritance', ['継承', 'inheritance', '親クラス', '子クラス']],
     ]);
   }
 

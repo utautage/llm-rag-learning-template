@@ -39,6 +39,14 @@
       "prerequisites": ["programming", "functions"],
       "relatedConcepts": ["data-structures", "complexity"],
       "description": "問題解決の手順"
+    },
+    "object-oriented": {
+      "label": "オブジェクト指向",
+      "level": "intermediate",
+      "subConcepts": ["classes", "inheritance", "polymorphism"],
+      "prerequisites": ["functions", "data-structures"],
+      "relatedConcepts": ["abstraction", "encapsulation"],
+      "description": "オブジェクトを中心としたプログラミング手法"
     }
   },
   "relations": [
@@ -65,6 +73,12 @@
       "to": "data-structures",
       "type": "related",
       "strength": 0.9
+    },
+    {
+      "from": "functions",
+      "to": "object-oriented",
+      "type": "prerequisite",
+      "strength": 0.8
     }
   ]
 }
