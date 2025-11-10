@@ -47,6 +47,14 @@
       "prerequisites": ["functions", "data-structures"],
       "relatedConcepts": ["abstraction", "encapsulation"],
       "description": "オブジェクトを中心としたプログラミング手法"
+    },
+    "recursion": {
+      "label": "再帰",
+      "level": "intermediate",
+      "subConcepts": ["recursion-tree", "recursion-stack"],
+      "prerequisites": ["functions", "data-structures", "algorithms"],
+      "relatedConcepts": ["algorithms", "recursion-tree"],
+      "description": "自分自身を呼び出す関数を用いたアルゴリズム"
     }
   },
   "relations": [
