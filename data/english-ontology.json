@@ -1,0 +1,20 @@
+{
+  "concepts": {
+    "greeting": {
+      "label": "挨拶",
+      "description": "基本的な挨拶ができる"
+    },
+    "ordering-food": {
+      "label": "食べ物の注文",
+      "description": "カフェで食べ物や飲み物を注文できる",
+      "prerequisites": ["greeting"]
+    }
+  },
+  "relations": [
+    {
+      "from": "greeting",
+      "to": "ordering-food",
+      "type": "prerequisite"
+    }
+  ]
+}
